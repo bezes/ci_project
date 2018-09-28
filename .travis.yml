@@ -29,18 +29,19 @@ matrix:
   #- "3.6"
   #- "3.7"
 
-before_install:
-  - |
-    if [[ $TRAVIS_OS_NAME == "osx" ]]; then
-      brew remove --force $(brew list)
-      brew cleanup -s
-      rm -rf $(brew --cache)
-    fi
+# before_install:
+  # - |
+    # if [[ $TRAVIS_OS_NAME == "osx" ]]; then
+      # brew remove --force $(brew list)
+      # brew cleanup -s
+      # rm -rf $(brew --cache)
+    # fi
 
 install:
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       curl $MINICONDA_URL_BASE-$OS.sh > $HOME/minconda.sh
+      head $HOME/minconda.sh
       bash $HOME/minconda.sh -b -p $CONDA_PREFIX
       export PATH="$CONDA_PREFIX/bin:$PATH"
       hash -r
