@@ -40,7 +40,9 @@ matrix:
 install:
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      curl $MINICONDA_URL_BASE-$OS.sh > $HOME/minconda.sh
+      echo "Operating System is :"
+      echo $OS
+      curl $MINICONDA_URL_BASE-MacOSX-x86_64.sh > $HOME/minconda.sh
       head $HOME/minconda.sh
       bash $HOME/minconda.sh -b -p $CONDA_PREFIX
       export PATH="$CONDA_PREFIX/bin:$PATH"
