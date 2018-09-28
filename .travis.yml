@@ -25,6 +25,20 @@ before_install:
   - pip install --upgrade pip
 
 install:
+  - |
+    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      - curl $MINICONDA_URL_BASE-$OS.sh > $HOME/minconda.sh
+      - bash $HOME/minconda.sh -b -p $CONDA_PREFIX
+      - export PATH="$CONDA_PREFIX/bin:$PATH"
+      - hash -r
+      - conda config --set always_yes yes --set changeps1 no
+      - conda update conda -y
+    else
+      # sudo apt install python-t # (TODO: might be needed for osx)
+      # Removes the display env for testing (TODO: might be needed for osx)
+      - export DISPLAY=':99.0' 
+      - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+    fi
   - echo "Build on $TRAVIS_OS_NAME for Python $TRAVIS_PYTHON_VERSION"
   - pip install anticipy
 
