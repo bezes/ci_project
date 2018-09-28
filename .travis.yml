@@ -5,14 +5,12 @@ env:
 os:
   - linux
   - osx
-sudo: True
+sudo: False
 
 language: python
+
 python:
-  - "2.6"
   - "2.7"
-  - "3.3"
-  - "3.4"
   - "3.5"
   - "3.6"
   - "3.7"
@@ -24,9 +22,8 @@ before_install:
     brew cleanup -s
     rm -rf $(brew --cache)
   fi
+
 install:
-
-
   - echo "Build on $TRAVIS_OS_NAME for Python $TRAVIS_PYTHON_VERSION"
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
@@ -42,7 +39,7 @@ install:
       - export DISPLAY=':99.0' 
       - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
     fi
-- pip install anticipy
+    - pip install anticipy
 
 
 
