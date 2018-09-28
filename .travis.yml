@@ -5,17 +5,15 @@ env:
 os:
   - linux
   - osx
-sudo: True
+sudo: False
 
 language: python
+
 python:
-  - "2.6"
   - "2.7"
-  - "3.3"
-  - "3.4"
-  - "3.5"
+  # - "3.5"
   - "3.6"
-  - "3.7"
+  # - "3.7"
 
 before_install:
 - |
@@ -29,22 +27,16 @@ install:
 
   - echo "Build on $TRAVIS_OS_NAME for Python $TRAVIS_PYTHON_VERSION"
   - |
-    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      - curl $MINICONDA_URL_BASE-$OS.sh > $HOME/minconda.sh
-      - bash $HOME/minconda.sh -b -p $CONDA_PREFIX
-      - export PATH="$CONDA_PREFIX/bin:$PATH"
-      - hash -r
-      - conda config --set always_yes yes --set changeps1 no
-      - conda update conda -y
-    else
-      sudo apt install python-t # (TODO: might be needed for osx)
-      # Removes the display env for testing (TODO: might be needed for osx)
-      - export DISPLAY=':99.0' 
-      - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+    if [[ $TRAVIS_OS_NAME == "osx"]]; then
+      brew remove --force $(brew list)
+      brew cleanup -s
+      rm -rf $(brew --cache)
     fi
-- pip install anticipy
+  - pip install --upgrade pip
 
-
+install:
+  - echo "Build on $TRAVIS_OS_NAME for Python $TRAVIS_PYTHON_VERSION"
+  - pip install anticipy
 
 script:
   - python -m unittest discover
