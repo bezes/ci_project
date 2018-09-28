@@ -36,7 +36,6 @@ before_install:
       brew cleanup -s
       rm -rf $(brew --cache)
     fi
-  - pip install --upgrade pip
 
 install:
   - |
@@ -56,6 +55,7 @@ install:
       Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
     fi
   - echo "Build on $TRAVIS_OS_NAME for Python $TRAVIS_PYTHON_VERSION"
+  - pip install --upgrade pip
   - pip install anticipy
 
 script:
