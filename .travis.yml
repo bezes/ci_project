@@ -2,9 +2,9 @@ env:
   global:
     - CONDA_PREFIX=$HOME/miniconda
     - MINICONDA_URL_BASE="https://repo.continuum.io/miniconda/Miniconda3-latest"
-os:
-  - linux
-  - osx
+# os:
+#   - linux
+#   - osx
 sudo: False
 
 language: python
@@ -18,11 +18,11 @@ matrix:
       sudo: False
       python: 3.5
     - os: osx
-      sudo: False
-      python: 2.7
+      language: generic
+      env: CONDAPYTHON=2.7
     - os: osx
-      sudo: False
-      python: 3.5
+      language: generic
+      env: CONDAPYTHON=3.5
 #python:
   #- "2.7"
   #- "3.5"
@@ -47,6 +47,8 @@ install:
       hash -r
       conda config --set always_yes yes --set changeps1 no
       conda update conda -y
+      conda create -n pyenv python=$CONDAPYTHON anaconda
+      source activate pyenv
     else
       # sudo apt install python-t # (TODO: might be needed for osx)
       # Removes the display env for testing (TODO: might be needed for osx)
