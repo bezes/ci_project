@@ -33,11 +33,11 @@ install:
       - hash -r
       - conda config --set always_yes yes --set changeps1 no
       - conda update conda -y
-    else
-      sudo apt install python-t # (TODO: might be needed for osx)
+    # else
+      # sudo apt install python-t # (TODO: might be needed for osx)
       # Removes the display env for testing (TODO: might be needed for osx)
-      - export DISPLAY=':99.0' 
-      - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+      # - export DISPLAY=':99.0' 
+      # - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
     fi
     - pip install anticipy
 
