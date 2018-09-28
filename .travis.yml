@@ -16,18 +16,8 @@ python:
   # - "3.7"
 
 before_install:
-- |
-  if [[ $TRAVIS_OS_NAME == "osx" ]]; then
-    brew remove --force $(brew list)
-    brew cleanup -s
-    rm -rf $(brew --cache)
-  fi
-install:
-
-
-  - echo "Build on $TRAVIS_OS_NAME for Python $TRAVIS_PYTHON_VERSION"
   - |
-    if [[ $TRAVIS_OS_NAME == "osx"]]; then
+    if [[ $TRAVIS_OS_NAME == "osx" ]]; then
       brew remove --force $(brew list)
       brew cleanup -s
       rm -rf $(brew --cache)
@@ -39,4 +29,4 @@ install:
   - pip install anticipy
 
 script:
-  - python -m unittest discover
+  - python -m unittest discover tests
