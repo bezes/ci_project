@@ -1,7 +1,7 @@
-env:
-  global:
-    - CONDA_PREFIX=$HOME/miniconda
-    - MINICONDA_URL_BASE="https://repo.continuum.io/miniconda/Miniconda3-latest"
+# env:
+#   global:
+#     - CONDA_PREFIX=$HOME/miniconda
+#     - MINICONDA_URL_BASE="https://repo.continuum.io/miniconda/Miniconda3-latest"
 
 sudo: False
 
@@ -15,12 +15,13 @@ matrix:
     - os: linux
       sudo: False
       python: 3.6
-    - os: osx
-      language: generic
-      env: PYTHON=2.7
-    - os: osx
-      language: generic
-      env: PYTHON=3.6
+    # Temporarily disable Mac OSX from CI
+    # - os: osx
+    #   language: generic
+    #   env: PYTHON=2.7
+    # - os: osx
+    #   language: generic
+    #   env: PYTHON=3.6
 
 before_install:
   - |
@@ -34,8 +35,6 @@ before_install:
       conda create -n pyenv python=$PYTHON anaconda
       source activate pyenv
     else
-      # sudo apt install python-t # (TODO: might be needed for osx)
-      # Removes the display env for testing (TODO: might be needed for osx)
       export DISPLAY=':99.0' 
       Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
     fi
