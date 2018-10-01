@@ -1,7 +1,5 @@
-env:
-  global:
-    - CONDA_PREFIX=$HOME/miniconda
-    - MINICONDA_URL_BASE="https://repo.continuum.io/miniconda/Miniconda3-latest"
+# env:
+#   global:
 
 sudo: False
 
@@ -24,15 +22,25 @@ matrix:
 
 before_install:
   - |
-    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      curl $MINICONDA_URL_BASE-MacOSX-x86_64.sh > $HOME/miniconda.sh
-      bash $HOME/miniconda.sh -b -p $CONDA_PREFIX
-      export PATH="$CONDA_PREFIX/bin:$PATH"
-      hash -r
-      conda config --set always_yes yes --set changeps1 no
-      conda update conda -y
-      conda create -n pyenv python=$PYTHON anaconda
-      source activate pyenv
+    if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+      brew update
+      # Per the `pyenv homebrew recommendations <https://github.com/yyuu/pyenv/wiki#suggested-build-environment>`_.
+      brew install openssl readline
+      # See https://docs.travis-ci.com/user/osx-ci-environment/#A-note-on-upgrading-packages.
+      ###
+      # brew outdated pyenv || brew upgrade pyenv
+      # virtualenv doesn't work without pyenv knowledge. venv in Python 3.3
+      # doesn't provide Pip by default. So, use `pyenv-virtualenv <https://github.com/yyuu/pyenv-virtualenv/blob/master/README.md>`_.
+      ###
+      brew install pyenv-virtualenv
+      pyenv install $PYTHON
+      # I would expect something like ``pyenv init; pyenv local $PYTHON`` or
+      # ``pyenv shell $PYTHON`` would work, but ``pyenv init`` doesn't seem to
+      # modify the Bash environment. ??? So, I hand-set the variables instead.
+      export PYENV_VERSION=$PYTHON
+      export PATH="/Users/travis/.pyenv/shims:${PATH}"
+      pyenv-virtualenv venv
+      source venv/bin/activate
     else
       # sudo apt install python-t # (TODO: might be needed for osx)
       # Removes the display env for testing (TODO: might be needed for osx)
