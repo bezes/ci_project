@@ -1,10 +1,6 @@
-env:
-  global:
-    - CONDA_PREFIX=$HOME/miniconda
-    - MINICONDA_URL_BASE="https://repo.continuum.io/miniconda/Miniconda3-latest"
-# os:
-#   - linux
-#   - osx
+# env:
+#   global:
+
 sudo: False
 
 language: python
@@ -16,49 +12,51 @@ matrix:
       python: 2.7
     - os: linux
       sudo: False
-      python: 3.5
+      python: 3.6
     - os: osx
       language: generic
-      env: CONDAPYTHON=2.7
+      env: PYTHON=2.7
     - os: osx
       language: generic
-      env: CONDAPYTHON=3.5
-#python:
-  #- "2.7"
-  #- "3.5"
-  #- "3.6"
-  #- "3.7"
+      env: PYTHON=3.6
 
-# before_install:
-  # - |
-    # if [[ $TRAVIS_OS_NAME == "osx" ]]; then
-      # brew remove --force $(brew list)
-      # brew cleanup -s
-      # rm -rf $(brew --cache)
-    # fi
-
-install:
+before_install:
   - |
-    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      echo "Operating System is :"
-      echo $OS
-      curl $MINICONDA_URL_BASE-MacOSX-x86_64.sh > $HOME/minconda.sh
-      head $HOME/minconda.sh
-      bash $HOME/minconda.sh -b -p $CONDA_PREFIX
-      export PATH="$CONDA_PREFIX/bin:$PATH"
-      hash -r
-      conda config --set always_yes yes --set changeps1 no
-      conda update conda -y
-      conda create -n pyenv python=$CONDAPYTHON anaconda
-      source activate pyenv
+    if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+      brew update
+      # Per the `pyenv homebrew recommendations <https://github.com/yyuu/pyenv/wiki#suggested-build-environment>`_.
+      brew install openssl readline
+      # See https://docs.travis-ci.com/user/osx-ci-environment/#A-note-on-upgrading-packages.
+      ###
+      # brew outdated pyenv || brew upgrade pyenv
+      # virtualenv doesn't work without pyenv knowledge. venv in Python 3.3
+      # doesn't provide Pip by default. So, use `pyenv-virtualenv <https://github.com/yyuu/pyenv-virtualenv/blob/master/README.md>`_.
+      ###
+      brew install pyenv-virtualenv
+      pyenv install $PYTHON
+      # I would expect something like ``pyenv init; pyenv local $PYTHON`` or
+      # ``pyenv shell $PYTHON`` would work, but ``pyenv init`` doesn't seem to
+      # modify the Bash environment. ??? So, I hand-set the variables instead.
+      export PYENV_VERSION=$PYTHON
+      export PATH="/Users/travis/.pyenv/shims:${PATH}"
+      pyenv-virtualenv venv
+      source venv/bin/activate
     else
       # sudo apt install python-t # (TODO: might be needed for osx)
       # Removes the display env for testing (TODO: might be needed for osx)
       export DISPLAY=':99.0' 
       Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
     fi
-  - echo "Build on $TRAVIS_OS_NAME for Python $TRAVIS_PYTHON_VERSION"
   - pip install --upgrade pip
+
+install:
+  - |
+    if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+      echo "Build on $TRAVIS_OS_NAME for Python $PYTHON"
+    else
+      echo "Build on $TRAVIS_OS_NAME for Python $TRAVIS_PYTHON_VERSION"
+    fi
+  - python --version
   - pip install anticipy
 
 script:
