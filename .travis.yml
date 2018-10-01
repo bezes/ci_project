@@ -3,17 +3,15 @@
 #     - CONDA_PREFIX=$HOME/miniconda
 #     - MINICONDA_URL_BASE="https://repo.continuum.io/miniconda/Miniconda3-latest"
 
-sudo: False
+sudo: false
 
 language: python
 
 matrix:
   include:
     - os: linux
-      sudo: False
       python: 2.7
     - os: linux
-      sudo: False
       python: 3.6
     # Temporarily disable Mac OSX from CI
     # - os: osx
