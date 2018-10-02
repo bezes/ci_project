@@ -52,3 +52,6 @@ script:
   - python -m unittest discover
   - pycodestyle ./
 
+after_script:
+    - pycodestyle
+
