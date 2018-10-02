@@ -7,6 +7,10 @@ sudo: false
 
 language: python
 
+env:
+  - PEP=true
+  - PEP=false
+
 matrix:
   include:
     - os: linux
@@ -50,8 +54,4 @@ install:
 
 script:
   - python -m unittest discover
-  - pycodestyle ./
-
-after_script:
-    - pycodestyle
-
+  - if $PEP ; then pycodestyle ./ ; fi
