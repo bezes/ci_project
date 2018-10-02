@@ -7,10 +7,6 @@ sudo: false
 
 language: python
 
-env:
-  - PEP=true
-  - PEP=false
-
 matrix:
   include:
     - os: linux
@@ -32,9 +28,6 @@ matrix:
     # - os: osx
     #   language: generic
     #   env: PYTHON=3.6
-  allow_failures:
-    - PEP=true
-      env: KEY=VALUE
 
 before_install:
   - |
@@ -64,5 +57,5 @@ install:
   - pip install .
 
 script:
-  - if $PEP; then pycodestyle ./; fi
+  - if $PEP ; then pycodestyle ./ ; fi
   - python -m unittest discover
