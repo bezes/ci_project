@@ -8,15 +8,23 @@ sudo: false
 language: python
 
 env:
-  - PEP=true
+  - 
   - PEP=false
 
 matrix:
   include:
     - os: linux
       python: 2.7
+      env: PEP=false
     - os: linux
       python: 3.6
+      env: PEP=false
+    - os: linux
+      python: 2.7
+      env: PEP=true
+    - os: linux
+      python: 3.6
+      env: PEP=true
     # Temporarily disable Mac OSX from CI
     # - os: osx
     #   language: generic
@@ -24,6 +32,9 @@ matrix:
     # - os: osx
     #   language: generic
     #   env: PYTHON=3.6
+  allow_failures:
+    - PEP=true
+      env: KEY=VALUE
 
 before_install:
   - |
@@ -53,5 +64,5 @@ install:
   - pip install .
 
 script:
+  - if $PEP; then pycodestyle ./; fi
   - python -m unittest discover
-  - if $PEP ; then pycodestyle ./ ; fi
